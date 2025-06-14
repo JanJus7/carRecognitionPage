@@ -1,0 +1,72 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - app-net
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-net
+
+  admin-service:
+    build: ./admin-service
+    depends_on:
+      - keycloak
+    networks:
+      - app-net
+
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-net
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-net
+    ports:
+      - "6379:6379"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloakAdminPassword
+    secrets:
+      - keycloakAdminPassword
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+
+volumes:
+  mongo_data:
+  redis_data:
+  keycloak_data:
+
+networks:
+  app-net:
+    driver: bridge
+
+secrets:
+  keycloakAdminPassword:
+    file: ./secrets/keycloakAdminPassword.txt
