@@ -1,3 +1,4 @@
 flask
 pymongo
 redis
+flask-cors

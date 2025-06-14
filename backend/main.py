@@ -1,32 +1,35 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from pymongo import MongoClient
 import redis
+import os
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+UPLOAD_FOLDER = os.environ.get("UPLOAD_DIR", "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 mongo_client = MongoClient("mongodb://mongo:27017")
 mongo_db = mongo_client["carx_db"]
-print("Połączono z MongoDB")
-
-redis_client = redis.Redis(host="redis", port=6379)
-try:
-    redis_client.ping()
-    print("Połączono z Redis")
-except redis.exceptions.ConnectionError:
-    print("Redis nieosiągalny")
+redis_client = redis.Redis(host="redis", port=6379) # does nothin for now
 
 
 @app.route("/photos", methods=["POST"])
-def add_photo():
-    try:
-        data = request.json
-        if not data:
-            return jsonify({"error": "Brak danych"}), 400
-        mongo_db.photos.insert_one(data)
-        return jsonify({"message": "Dodano zdjęcie"}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+def upload_photo():
+    file = request.files["file"]
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
 
+    mongo_db.photos.insert_one({"filename": filename})
+    return jsonify({"message": "Uploaded"}), 201
+
+
+@app.route("/uploads/<filename>")
+def serve_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 @app.route("/photos", methods=["GET"])
 def get_photos():
