@@ -3,6 +3,7 @@ node_modules/
 dist/
 .env.local
 .env.*
+secrets/
 
 # Python / Flask
 __pycache__/
