@@ -1,0 +1,33 @@
+# Node.js / Vite
+node_modules/
+dist/
+.env.local
+.env.*
+
+# Python / Flask
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+instance/
+*.sqlite3
+.mypy_cache/
+.pytest_cache/
+*.log
+
+# Docker
+*.pid
+*.seed
+*.envrc
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code / IDEs
+.vscode/
+.idea/
+*.code-workspace
