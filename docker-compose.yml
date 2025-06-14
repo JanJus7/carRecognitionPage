@@ -18,12 +18,12 @@ services:
     networks:
       - app-net
 
-  admin-service:
-    build: ./admin-service
-    depends_on:
-      - keycloak
-    networks:
-      - app-net
+  # admin-service:
+  #   build: ./admin-service
+  #   depends_on:
+  #     - keycloak
+  #   networks:
+  #     - app-net
 
   mongo:
     image: mongo:6
