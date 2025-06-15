@@ -30,6 +30,7 @@ services:
     image: mongo:6
     volumes:
       - mongo_data:/data/db
+      - mongo_config:/data/configdb
     networks:
       - app-net
     ports:
@@ -62,6 +63,7 @@ volumes:
   mongo_data:
   keycloak_data:
   uploads_data:
+  mongo_config:
 
 networks:
   app-net:
