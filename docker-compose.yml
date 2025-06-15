@@ -50,9 +50,7 @@ services:
     command: start-dev
     environment:
       KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloakAdminPassword
-    secrets:
-      - keycloakAdminPassword
+      KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - keycloak_data:/opt/keycloak/data
     ports:
@@ -69,6 +67,3 @@ networks:
   app-net:
     driver: bridge
 
-secrets:
-  keycloakAdminPassword:
-    file: ./secrets/keycloakAdminPassword.txt

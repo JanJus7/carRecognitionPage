@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request, send_from_directory
 from pymongo import MongoClient
-import redis
 import os
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -13,7 +12,6 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 mongo_client = MongoClient("mongodb://mongo:27017")
 mongo_db = mongo_client["carx_db"]
-redis_client = redis.Redis(host="redis", port=6379) # does nothin for now
 
 
 @app.route("/photos", methods=["POST"])
