@@ -1,8 +1,8 @@
 services:
   frontend:
     build: ./frontend
-    ports:
-      - "5173:80"
+    expose:
+      - "4173"
     depends_on:
       - backend
     networks:
@@ -14,7 +14,6 @@ services:
       - "5000:5000"
     depends_on:
       - mongo
-      - redis
     volumes:
       - uploads_data:/app/uploads
     networks:
@@ -36,14 +35,15 @@ services:
     ports:
       - "27017:27017"
 
-  redis:
-    image: redis:7
-    volumes:
-      - redis_data:/data
+  proxy:
+    build: ./proxy
+    ports:
+      - "3000:80"
+    depends_on:
+      - frontend
+      - backend
     networks:
       - app-net
-    ports:
-      - "6379:6379"
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -62,7 +62,6 @@ services:
 
 volumes:
   mongo_data:
-  redis_data:
   keycloak_data:
   uploads_data:
 

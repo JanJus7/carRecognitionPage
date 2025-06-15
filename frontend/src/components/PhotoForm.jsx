@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { uploadPhoto } from "../api/photos";
 
 export default function PhotoForm({ onUpload }) {
   const [file, setFile] = useState(null);
@@ -13,9 +13,7 @@ export default function PhotoForm({ onUpload }) {
     const formData = new FormData();
     formData.append("file", file);
 
-    await axios.post("http://localhost:5000/photos", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    await uploadPhoto(file);
 
     setFile(null);
     onUpload();

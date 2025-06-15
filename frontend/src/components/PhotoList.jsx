@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { getPhotos } from "../api/photos";
 
 export default function PhotoList({ refreshTrigger }) {
   const [photos, setPhotos] = useState([]);
@@ -9,8 +9,8 @@ export default function PhotoList({ refreshTrigger }) {
 
   const fetchPhotos = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/photos");
-      setPhotos(res.data);
+      const data = await getPhotos();
+      setPhotos(data);
     } catch (err) {
       console.error("Błąd pobierania zdjęć:", err);
     }
@@ -27,7 +27,7 @@ export default function PhotoList({ refreshTrigger }) {
           {photos.map((photo, index) => (
             <img
               key={index}
-              src={`http://localhost:5000/uploads/${photo.filename}`}
+              src={`/uploads/${photo.filename}`}
               alt={photo.filename}
               className="w-16 h-16 object-cover rounded cursor-pointer border hover:opacity-80"
               onClick={() => setSelectedPhoto(photo.filename)}
@@ -45,7 +45,7 @@ export default function PhotoList({ refreshTrigger }) {
             <FontAwesomeIcon icon={faXmark} />
           </button>
           <img
-            src={`http://localhost:5000/uploads/${selectedPhoto}`}
+            src={`/uploads/${selectedPhoto}`}
             alt="Preview"
             className="max-w-full max-h-full object-contain rounded-lg"
           />
