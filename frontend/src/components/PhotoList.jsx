@@ -10,9 +10,15 @@ export default function PhotoList({ refreshTrigger }) {
   const fetchPhotos = async () => {
     try {
       const data = await getPhotos();
-      setPhotos(data);
+      if (Array.isArray(data)) {
+        setPhotos(data);
+      } else {
+        console.error("Invalid backend answer: ", data);
+        setPhotos([]);
+      }
     } catch (err) {
-      console.error("Błąd pobierania zdjęć:", err);
+      console.error("Error fetching photos: ", err);
+      setPhotos([]);
     }
   };
 

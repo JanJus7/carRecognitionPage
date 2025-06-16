@@ -1,4 +1,6 @@
 flask
-pymongo
-redis
+flask-login
 flask-cors
+pymongo
+psycopg2-binary
+werkzeug
