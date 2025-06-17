@@ -48,7 +48,6 @@ def load_user(user_id):
     row = pg_cursor.fetchone()
     return User(*row) if row else None
 
-# Routes
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -62,6 +61,7 @@ def register():
         pg_cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_pw))
         return jsonify({"message": "User registered"}), 201
     except psycopg2.errors.UniqueViolation:
+        pg_conn.rollback()
         return jsonify({"error": "Username exists"}), 409
 
 @app.route("/login", methods=["POST"])
