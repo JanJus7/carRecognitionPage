@@ -5,9 +5,9 @@ metadata:
     io.kompose.service: mongo-config
   name: mongo-config
 spec:
+  volumeName: mongo-config-pv
   accessModes:
     - ReadWriteOnce
-  storageClassName: standard
   resources:
     requests:
       storage: 100Mi

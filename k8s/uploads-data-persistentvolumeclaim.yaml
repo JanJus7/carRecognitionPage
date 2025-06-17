@@ -5,9 +5,9 @@ metadata:
     io.kompose.service: uploads-data
   name: uploads-data
 spec:
+  volumeName: uploads-data-pv
   accessModes:
     - ReadWriteOnce
-  storageClassName: standard
   resources:
     requests:
       storage: 100Mi

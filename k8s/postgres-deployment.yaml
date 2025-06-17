@@ -33,8 +33,7 @@ spec:
           image: postgres:15
           livenessProbe:
             exec:
-              command:
-                - pg_isready -U carxuser -d carxauth
+              command: ["sh", "-c", "pg_isready -U carxuser -d carxauth"]
             failureThreshold: 5
             periodSeconds: 30
             timeoutSeconds: 10

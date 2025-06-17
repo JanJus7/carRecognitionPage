@@ -23,15 +23,16 @@ spec:
         io.kompose.service: mongo
     spec:
       containers:
-        - image: mongo:6
-          livenessProbe:
-            exec:
-              command:
-                - echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-            failureThreshold: 3
-            periodSeconds: 30
-            timeoutSeconds: 10
-          name: mongo
+        - name: mongo
+          image: mongo:6
+          command: ["mongod", "--bind_ip_all"]
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+          #   failureThreshold: 3
+          #   periodSeconds: 30
+          #   timeoutSeconds: 10
           resources:
             requests:
               memory: "256Mi"

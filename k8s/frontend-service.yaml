@@ -8,9 +8,10 @@ metadata:
     io.kompose.service: frontend
   name: frontend
 spec:
+  type: ClusterIP
   ports:
-    - name: "4173"
-      port: 4173
-      targetPort: 4173
+    - name: "http"
+      port: 80
+      targetPort: 80
   selector:
     io.kompose.service: frontend
