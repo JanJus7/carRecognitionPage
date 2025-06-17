@@ -59,3 +59,4 @@ dist-ssr
 *.sw?
 
 metrics-server.yaml
+commands.txt
