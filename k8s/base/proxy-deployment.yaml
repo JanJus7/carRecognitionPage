@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: proxy
   name: proxy
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       io.kompose.service: proxy
