@@ -64,14 +64,13 @@ spec:
             - name: uploads-data
               mountPath: /app/uploads
           livenessProbe:
-            exec:
-              command:
-                - curl
-                - -f
-                - http://localhost:5000/me
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 3
-            periodSeconds: 30
-            timeoutSeconds: 10
           resources:
             requests:
               memory: "128Mi"

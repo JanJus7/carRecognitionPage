@@ -113,6 +113,9 @@ def get_photos():
     photos = list(mongo_db.photos.find({"user_id": int(current_user.id)}, {"_id": 0}))
     return jsonify(photos)
 
+@app.route("/health")
+def health():
+    return "OK", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
