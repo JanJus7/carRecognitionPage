@@ -1,6 +1,10 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-ENV UPLOAD_DIR=/app/uploads
+ARG UPLOAD_DIR=/app/uploads
+
+ENV UPLOAD_DIR=${UPLOAD_DIR}
+
+RUN apt-get update && apt-get upgrade -y && apt-get clean
 
 WORKDIR /app
 
