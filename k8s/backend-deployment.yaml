@@ -23,10 +23,42 @@ spec:
         io.kompose.service: backend
     spec:
       containers:
-        - env:
-            - name: DATABASE_URL
-              value: postgresql://carxuser:carxpass@postgres:5432/carxauth
+        - name: backend
           image: janjus/carx-backend:latest
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: SECRET_KEY
+            - name: UPLOAD_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: UPLOAD_DIR
+          volumeMounts:
+            - name: uploads-data
+              mountPath: /app/uploads
           livenessProbe:
             exec:
               command:
@@ -36,10 +68,6 @@ spec:
             failureThreshold: 3
             periodSeconds: 30
             timeoutSeconds: 10
-          name: backend
-          ports:
-            - containerPort: 5000
-              protocol: TCP
           resources:
             requests:
               memory: "128Mi"
@@ -47,9 +75,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-          volumeMounts:
-            - mountPath: /app/uploads
-              name: uploads-data
       restartPolicy: Always
       volumes:
         - name: uploads-data

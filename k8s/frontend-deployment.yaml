@@ -21,7 +21,17 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - image: janjus/carx-frontend:latest
+        - name: frontend
+          image: janjus/carx-frontend:latest
+          ports:
+            - containerPort: 4173
+              protocol: TCP
+          env:
+            - name: VITE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: VITE_API_URL
           livenessProbe:
             exec:
               command:
@@ -32,10 +42,6 @@ spec:
             failureThreshold: 3
             periodSeconds: 30
             timeoutSeconds: 10
-          name: frontend
-          ports:
-            - containerPort: 4173
-              protocol: TCP
           resources:
             requests:
               cpu: "100m"
