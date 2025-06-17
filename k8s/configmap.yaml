@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  UPLOAD_DIR: "/app/uploads"
+  VITE_API_URL: "/api/"
