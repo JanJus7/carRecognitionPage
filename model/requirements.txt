@@ -1,0 +1,10 @@
+numpy
+scipy
+matplotlib
+pandas
+scikit-learn
+tensorflow
+
+# for Stanford Cars dataset
+h5py
+Pillow
