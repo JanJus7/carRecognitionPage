@@ -12,17 +12,13 @@ train_annos = scipy.io.loadmat(os.path.join(DEVKIT_PATH, "cars_train_annos.mat")
 ][0]
 meta = scipy.io.loadmat(os.path.join(DEVKIT_PATH, "cars_meta.mat"))["class_names"][0]
 
-all_images = sorted(os.listdir(TRAIN_IMAGES_PATH))
-
 class_dict = {i + 1: meta[i][0].replace(" ", "_") for i in range(len(meta))}
 
 image_label_pairs = []
 
 for item in train_annos:
-    image_index = int(item[0][0])
-    filename = all_images[image_index - 1]
-
-    class_idx = int(item[-2][0][0])
+    filename = str(item[5][0])
+    class_idx = int(item[4][0][0])
     class_name = class_dict[class_idx]
     image_label_pairs.append((filename, class_name))
 
