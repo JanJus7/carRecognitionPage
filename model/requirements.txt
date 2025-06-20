@@ -8,3 +8,5 @@ tensorflow
 # for Stanford Cars dataset
 h5py
 Pillow
+
+seaborn
