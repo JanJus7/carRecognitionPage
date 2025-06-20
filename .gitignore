@@ -62,3 +62,4 @@ metrics-server.yaml
 commands.txt
 
 model/dataset/
+.python-version
