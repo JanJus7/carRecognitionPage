@@ -63,3 +63,4 @@ commands.txt
 
 model/dataset/
 .python-version
+model/savedModel/
