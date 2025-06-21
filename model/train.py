@@ -10,8 +10,8 @@ train_dir = "dataset/data_split/train"
 val_dir = "dataset/data_split/val"
 
 IMG_SIZE = (224, 224)
-BATCH_SIZE = 32
-EPOCHS = 50
+BATCH_SIZE = 64
+EPOCHS = 200
 MODEL_PATH = "model_best.keras"
 
 train_datagen = ImageDataGenerator(
@@ -42,17 +42,20 @@ val_generator = val_datagen.flow_from_directory(
 )
 
 base_model = MobileNetV2(include_top=False, weights="imagenet", input_shape=(224, 224, 3))
-base_model.trainable = False
+base_model.trainable = True
+
+for layer in base_model.layers[:100]:
+    layer.trainable = False
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dropout(0.3)(x)
-x = Dense(256, activation="relu")(x)
+x = Dense(512, activation="relu")(x)
 output = Dense(train_generator.num_classes, activation="softmax")(x)
 
 model = Model(inputs=base_model.input, outputs=output)
 
-model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+model.compile(tf.keras.optimizers.Adam(1e-5), loss="categorical_crossentropy", metrics=["accuracy"])
 
 early_stop = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
 checkpoint = ModelCheckpoint(MODEL_PATH, monitor="val_loss", save_best_only=True)

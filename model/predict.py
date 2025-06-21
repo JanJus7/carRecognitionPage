@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 
 MODEL_PATH = "model_best.keras"
-IMAGE_PATH = "myPhotos/test1.jpg"
+IMAGE_PATH = "myPhotos/test4.jpg"
 IMG_SIZE = (224, 224)
 
 model = tf.keras.models.load_model(MODEL_PATH)
