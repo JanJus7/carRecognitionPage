@@ -65,3 +65,5 @@ model/dataset/
 .python-version
 model/savedModel/
 model/myPhotos/
+
+model_best*

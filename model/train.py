@@ -12,15 +12,17 @@ val_dir = "dataset/data_split/val"
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 50
-MODEL_PATH = "model_best.h5"
+MODEL_PATH = "model_best.keras"
 
 train_datagen = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=20,
+    rotation_range=15,
     zoom_range=0.2,
     width_shift_range=0.1,
     height_shift_range=0.1,
-    horizontal_flip=True
+    horizontal_flip=True,
+    shear_range=0.1,
+    brightness_range=(0.7, 1.3)
 )
 
 val_datagen = ImageDataGenerator(rescale=1./255)

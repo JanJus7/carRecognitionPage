@@ -8,7 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import Counter
 
-MODEL_PATH = "model_best.h5"
+MODEL_PATH = "model_best.keras"
 VAL_DIR = "dataset/data_split/val"
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32

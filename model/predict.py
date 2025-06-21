@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
 import os
 
-MODEL_PATH = "model_best.h5"
+MODEL_PATH = "model_best.keras"
 IMAGE_PATH = "myPhotos/test1.jpg"
 IMG_SIZE = (224, 224)
 
