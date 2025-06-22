@@ -5,13 +5,17 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.losses import CategoricalCrossentropy
+from tensorflow.keras.metrics import TopKCategoricalAccuracy
+
+tf.keras.backend.clear_session()
 
 train_dir = "dataset/data_split/train"
 val_dir = "dataset/data_split/val"
 
-IMG_SIZE = (224, 224)
+IMG_SIZE = (240, 240)
 BATCH_SIZE = 64
-EPOCHS = 200
+EPOCHS = 300
 MODEL_PATH = "model_best.keras"
 
 train_datagen = ImageDataGenerator(
@@ -41,7 +45,7 @@ val_generator = val_datagen.flow_from_directory(
     class_mode="categorical"
 )
 
-base_model = MobileNetV2(include_top=False, weights="imagenet", input_shape=(224, 224, 3))
+base_model = MobileNetV2(include_top=False, weights="imagenet", input_shape=(240, 240, 3))
 base_model.trainable = True
 
 for layer in base_model.layers[:100]:
@@ -49,15 +53,14 @@ for layer in base_model.layers[:100]:
 
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
-x = Dropout(0.3)(x)
-x = Dense(512, activation="relu")(x)
+x = Dense(1024, activation="relu")(x)
 output = Dense(train_generator.num_classes, activation="softmax")(x)
 
 model = Model(inputs=base_model.input, outputs=output)
 
-model.compile(tf.keras.optimizers.Adam(1e-5), loss="categorical_crossentropy", metrics=["accuracy"])
+model.compile(optimizer=tf.keras.optimizers.Adam(3e-5), loss="categorical_crossentropy", metrics=["accuracy", TopKCategoricalAccuracy(k=3)])
 
-early_stop = EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)
+early_stop = EarlyStopping(monitor="val_loss", patience=11, restore_best_weights=True)
 checkpoint = ModelCheckpoint(MODEL_PATH, monitor="val_loss", save_best_only=True)
 
 history = model.fit(

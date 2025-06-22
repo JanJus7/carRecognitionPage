@@ -4,9 +4,9 @@ from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
 import os
 
-MODEL_PATH = "model_best.keras"
+MODEL_PATH = "model_best_72p_2.keras"
 IMAGE_PATH = "myPhotos/test4.jpg"
-IMG_SIZE = (224, 224)
+IMG_SIZE = (240, 240)
 
 model = tf.keras.models.load_model(MODEL_PATH)
 

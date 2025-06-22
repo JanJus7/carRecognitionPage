@@ -18,9 +18,11 @@
 
 5. Podczas trzeciego podejścia postanowiłem zwiększyć `batch_size` do 64. Dało to najoptymalniejszy wynik do tej pory – val accuracy wynosiło 37%. Dalsze zwiększanie `batch_size` nie poprawiało wyników.
 
-6. Po odblokowaniu górnych warstw MobileNetV2 (fine-tuning) i zwiększeniu liczby neuronów w gęstej warstwie dwukrotnie (do 512), val accuracy skoczyło na 69%. Jest to znacząca poprawa względem poprzedniej próby.
+6. Po odblokowaniu górnych warstw MobileNetV2 (fine-tuning) i zwiększeniu liczby neuronów dwukrotnie (do 512), val accuracy skoczyło na 69%. Jest to znacząca poprawa względem poprzedniej próby.
 
 > Model osiągnął **69% dokładności walidacyjnej** przy 196 klasach, co jest bardzo dobrym wynikiem, biorąc pod uwagę zróżnicowanie i liczbę danych (~6,5 tys. obrazów). Krzywe trenowania sugerują, że model nadal może zyskać na dalszym tuningu.
+
+7. W kolejnych dwóch podejściach postawowiłem nieznacznie zmienić parametry. Zwiększyłem liczbę neuronów do 1024, oraz img size do 240. oprócz tego w ostatnim podejściu zwiększyłem patience do 11 i optimizer Adam do 3e-5 usuwając przy tym Dropout. Oba podejścia osiągnęły **skuteczność na poziomie 72%**. Ze względu na ograniczenia sprzętowe GPU, kolejne próby z tą architekturą nie będą przeprowadzane.
 
 ---
 
@@ -34,13 +36,13 @@
 
 ![Macierz pomyłek](model/plots/maciezBledow1-top40.png)
 
-### Wykres strat i dokładności dla modelu z 69%
+### Wykres strat i dokładności dla modelu z 72%
 
-![Wykres treningu](model/plots/training_plot5_69p.png)
+![Wykres treningu](model/plots/training_plot5_72p.png)
 
-### Macierz pomyłek dla modelu z 69% – Top 40 klas
+### Macierz pomyłek dla modelu z 72% – Top 40 klas
 
-![Macierz pomyłek](model/plots/maciezBledow5-top40-69p.png)
+![Macierz pomyłek](model/plots/maciezBledow5-top40-72p.png)
 
 ---
 

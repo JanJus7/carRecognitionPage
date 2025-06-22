@@ -8,9 +8,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from collections import Counter
 
-MODEL_PATH = "model_best.keras"
+MODEL_PATH = "model_best_72p_2.keras"
 VAL_DIR = "dataset/data_split/val"
-IMG_SIZE = (224, 224)
+IMG_SIZE = (240, 240)
 BATCH_SIZE = 32
 
 model = tf.keras.models.load_model(MODEL_PATH)
