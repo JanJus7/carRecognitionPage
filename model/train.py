@@ -48,7 +48,7 @@ val_generator = val_datagen.flow_from_directory(
 base_model = MobileNetV2(include_top=False, weights="imagenet", input_shape=(240, 240, 3))
 base_model.trainable = True
 
-for layer in base_model.layers[:80]:
+for layer in base_model.layers[:100]:
     layer.trainable = False
 
 x = base_model.output
