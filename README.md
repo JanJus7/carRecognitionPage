@@ -1,5 +1,21 @@
 # Projekt zaliczeniowy: Inteligencja Obliczeniowa
 
+## Założenia projektu
+
+Założeniami projektu, było wytrenowanie modelu inteligencji obliczeniowej, zdolnego do rozpozania modelu samochodu z dokładnością przynajmniej 75%.
+
+---
+
+## Praktyczne zastosowanie
+
+Model może być użyty jako:
+- system rozpoznawania modeli samochodów np. w aplikacji mobilnej
+- element systemów inteligentnych parkingów
+- pomoc dla firm ubezpieczeniowych przy weryfikacji pojazdów
+- policyjne bazy danych
+
+---
+
 ## Etapy pracy
 
 1. Rozpocząłem od poszukiwań zadowalającego mnie zbioru danych – wybrałem Stanford Cars Dataset, który zawiera 196 klas pojazdów.
@@ -22,8 +38,14 @@
 
 > Model osiągnął **69% dokładności walidacyjnej** przy 196 klasach, co jest bardzo dobrym wynikiem, biorąc pod uwagę zróżnicowanie i liczbę danych (~6,5 tys. obrazów). Krzywe trenowania sugerują, że model nadal może zyskać na dalszym tuningu.
 
-7. W kolejnych dwóch podejściach postawowiłem nieznacznie zmienić parametry. Zwiększyłem liczbę neuronów do 1024, oraz img size do 240. oprócz tego w ostatnim podejściu zwiększyłem patience do 11 i optimizer Adam do 3e-5 usuwając przy tym Dropout. Oba podejścia osiągnęły **skuteczność na poziomie 72%**. Ze względu na ograniczenia sprzętowe GPU, kolejne próby z tą architekturą nie będą przeprowadzane.
+7. W kolejnych dwóch podejściach postawowiłem nieznacznie zmienić parametry. Zwiększyłem liczbę neuronów do 1024, oraz img size do 240. oprócz tego w ostatnim podejściu zwiększyłem patience do 11 i optimizer Adam do 3e-5 usuwając przy tym Dropout. Oba podejścia osiągnęły **skuteczność na poziomie 72%**. Ze względu na ograniczenia sprzętowe GPU, kolejne próby nie będą przeprowadzane.
 
+8. Do ostatniej próby użyłem algorytmu **EfficientNetV3**. Niestety ze względu na ograniczenia srzętowe nie byłem zbytnio w stanie zmienić parametrów i wynik końcowy okazał się być taki sam.
+
+---
+
+## Wnioski
+Model osiągnął 72% skuteczności, co jest wynikiem bliskim założeniom. Potwierdza to fakt, że przy umiejętnym dobraniu parametrów uczenia i mocnym sprzęcie, da się wytrenować model zdolny do rozpoznawania modeli samochodów z dokładnością powyżej 75%.
 ---
 
 ## Wyniki
@@ -38,30 +60,25 @@
 
 ### Wykres strat i dokładności dla modelu z 72%
 
-![Wykres treningu](model/plots/training_plot5_72p.png)
+![Wykres treningu](model/plots/training_plot7_72p.png)
 
 ### Macierz pomyłek dla modelu z 72% – Top 40 klas
 
-![Macierz pomyłek](model/plots/maciezBledow5-top40-72p.png)
+![Macierz pomyłek](model/plots/maciezBledow7-top40_72p.png)
 
 ---
 
-## O modelu i metrykach
+## Środowisko
 
-- **MobileNetV2** to lekka, szybka sieć CNN zaprojektowana do klasyfikacji obrazów. Skorzystałem z **transfer learningu**, bazując na wagach wytrenowanych na ImageNet.
-- Do końcówki modelu dodałem własne warstwy: `GlobalAveragePooling2D`, `Dropout`, `Dense`, `softmax`.
-- **Metryka**: `val accuracy` (dokładność na zbiorze walidacyjnym).
-- **Loss**: `categorical_crossentropy` – odpowiednia dla klasyfikacji wieloklasowej.
+Model trenowano na:
+- Python 3.12
+- TensorFlow 2.19 (CPU/GPU)
+- Keras (zintegrowany z TF)
+- Scikit-learn, NumPy, Pillow
 
----
-
-## Możliwe usprawnienia (TODO)
-
-- Wypróbować inne architektury (np. EfficientNet, ResNet)
-- Zwiększyć liczbę odblokowanych warstw w bazowym modelu (fine-tuning)
-- Poprawić balans klas (niektóre mają mało zdjęć)
-- Zastosować augmentację tylko dla rzadkich klas
-- Trenować na większej rozdzielczości (np. 299x299)
+Sprzęt:
+- NVIDIA RTX 3070, 8 GB VRAM
+- RAM: 32 GB
 
 ---
 
