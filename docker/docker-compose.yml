@@ -1,7 +1,7 @@
 services:
   frontend:
-    # build: ./frontend
-    image: janjus/carx-frontend:latest
+    build: ../frontend
+    # image: janjus/carx-frontend:latest
     expose:
       - "4173"
     depends_on:
@@ -15,8 +15,8 @@ services:
       retries: 3
 
   backend:
-    # build: ./backend
-    image: janjus/carx-backend:latest
+    build: ../backend
+    # image: janjus/carx-backend:latest
     ports:
       - "5000:5000"
     depends_on:
@@ -69,8 +69,8 @@ services:
       retries: 5
 
   proxy:
-    # build: ./proxy
-    image: janjus/carx-proxy:latest
+    build: ../proxy
+    # image: janjus/carx-proxy:latest
     ports:
       - "3000:80"
     depends_on:
@@ -80,6 +80,20 @@ services:
       - app-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  model:
+    build: ../model
+    # image: janjus/carx-model:latest
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/predict"]
       interval: 30s
       timeout: 10s
       retries: 3

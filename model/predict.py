@@ -21,7 +21,7 @@ pred = model.predict(img_array)[0]
 class_id = np.argmax(pred)
 confidence = pred[class_id]
 
-print(f"[RESULT] Przewidywana klasa: {class_names[class_id]} ({confidence:.2%})")
+print(f"Predicted car:  {class_names[class_id]} ({confidence:.2%})")
 
 plt.imshow(img)
 plt.title(f"{class_names[class_id]} ({confidence:.2%})")

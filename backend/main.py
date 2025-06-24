@@ -1,9 +1,17 @@
 from pymongo import MongoClient
 import os
+import requests
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import Flask, request, jsonify, session, send_from_directory
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+    UserMixin,
+)
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 
@@ -22,31 +30,36 @@ pg_conn = psycopg2.connect(
     dbname=os.environ.get("POSTGRES_DB", "carxauth"),
     user=os.environ.get("POSTGRES_USER", "carxuser"),
     password=os.environ.get("POSTGRES_PASSWORD", "carxpass"),
-    host=os.environ.get("POSTGRES_HOST", "postgres")
+    host=os.environ.get("POSTGRES_HOST", "postgres"),
 )
 pg_conn.autocommit = True
 pg_cursor = pg_conn.cursor()
-pg_cursor.execute("""
+pg_cursor.execute(
+    """
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(100) UNIQUE NOT NULL,
         password TEXT NOT NULL
     )
-""")
+"""
+)
 
 mongo_client = MongoClient("mongodb://mongo:27017")
 mongo_db = mongo_client["carx_db"]
+
 
 class User(UserMixin):
     def __init__(self, id, username):
         self.id = id
         self.username = username
 
+
 @login_manager.user_loader
 def load_user(user_id):
     pg_cursor.execute("SELECT id, username FROM users WHERE id = %s", (user_id,))
     row = pg_cursor.fetchone()
     return User(*row) if row else None
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -58,11 +71,15 @@ def register():
 
     hashed_pw = generate_password_hash(password)
     try:
-        pg_cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_pw))
+        pg_cursor.execute(
+            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, hashed_pw),
+        )
         return jsonify({"message": "User registered"}), 201
     except psycopg2.errors.UniqueViolation:
         pg_conn.rollback()
         return jsonify({"error": "Username exists"}), 409
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -78,11 +95,13 @@ def login():
         return jsonify({"message": "Logged in"})
     return jsonify({"error": "Invalid credentials"}), 401
 
+
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return jsonify({"message": "Logged out"})
+
 
 @app.route("/me")
 def me():
@@ -99,13 +118,32 @@ def upload_photo():
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
 
-    mongo_db.photos.insert_one({"filename": filename, "user_id": current_user.id})
-    return jsonify({"message": "Uploaded"}), 201
+    try:
+        with open(filepath, "rb") as f:
+            resp = requests.post("http://model:8000/predict", files={"file": f})
+        resp.raise_for_status()
+        result = resp.json()
+    except Exception as e:
+        result = {"label": "Unknown", "confidence": 0.0, "error": str(e)}
+
+    mongo_db.photos.insert_one(
+        {
+            "filename": filename,
+            "user_id": current_user.id,
+            "prediction": {
+                "label": result.get("label"),
+                "confidence": result.get("confidence"),
+            },
+        }
+    )
+
+    return jsonify({"message": "Uploaded", "prediction": result}), 201
 
 
 @app.route("/uploads/<filename>")
 def serve_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
 
 @app.route("/photos", methods=["GET"])
 @login_required
@@ -113,9 +151,11 @@ def get_photos():
     photos = list(mongo_db.photos.find({"user_id": int(current_user.id)}, {"_id": 0}))
     return jsonify(photos)
 
+
 @app.route("/health")
 def health():
     return "OK", 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

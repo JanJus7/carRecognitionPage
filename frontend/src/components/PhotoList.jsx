@@ -12,6 +12,7 @@ export default function PhotoList({ refreshTrigger }) {
       const data = await getPhotos();
       if (Array.isArray(data)) {
         setPhotos(data);
+        console.log("Fetched photos:", data);
       } else {
         console.error("Invalid backend answer: ", data);
         setPhotos([]);
@@ -31,13 +32,22 @@ export default function PhotoList({ refreshTrigger }) {
       <div className="w-full overflow-x-auto pb-4">
         <div className="flex gap-2 w-max">
           {photos.map((photo, index) => (
-            <img
-              key={index}
-              src={`/uploads/${photo.filename}`}
-              alt={photo.filename}
-              className="w-16 h-16 object-cover rounded cursor-pointer border hover:opacity-80"
-              onClick={() => setSelectedPhoto(photo.filename)}
-            />
+            <div key={index} className="flex flex-col items-center">
+              <img
+                src={`/uploads/${photo.filename}`}
+                alt={photo.filename}
+                className="w-16 h-16 object-cover rounded cursor-pointer border hover:opacity-80"
+                onClick={() => setSelectedPhoto(photo.filename)}
+              />
+              {photo.prediction && (
+                <div className="text-center text-xs mt-1">
+                  <p className="font-semibold">{photo.prediction.label}</p>
+                  <p className="text-gray-500">
+                    {(photo.prediction.confidence * 100).toFixed(2)}%
+                  </p>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
